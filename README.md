@@ -106,6 +106,13 @@ orders.count()
 ```
 java -cp target/emr-dynamodb-tools-4.2.0-SNAPSHOT.jar org.apache.hadoop.dynamodb.tools.DynamoDBExport /where/output/should/go my-dynamo-table-name
 ```
+```
+export YARN_USER_CLASSPATH=.
+tbl=test_2_AttributeProfile; yarn jar emr-dynamodb-tools-4.17.0-SNAPSHOT.jar org.apache.hadoop.dynamodb.tools.DynamoDBExport s3a://civicscience-mwrona/ddb/${tbl}/$(date +%Y%m%d) ${tbl}
+```
+
+NOTE:  The above is a test run, and demonstrates the use of cs-job-props.xml as a way to modify the default behavior.
+
 ##### Import usage
 ```
 java -cp target/emr-dynamodb-tools-4.2.0-SNAPSHOT.jar org.apache.hadoop.dynamodb.tools.DynamoDBImport /where/input/data/is my-dynamo-table-name

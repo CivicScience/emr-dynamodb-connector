@@ -34,9 +34,9 @@ import org.apache.hadoop.mapred.Reporter;
 class ExportMapper extends MapReduceBase implements Mapper<Text, DynamoDBItemWritable, Text, Text> {
 
   private static final Log log = LogFactory.getLog(ExportMapper.class);
-  //10M/file for observations creates ~400 files and for audience identity creates ~2500 files.
-  //  good enough for now...
-  private static final int MAX_ITEM_COUNT_PER_FILE = 100000 * 100;
+  private static final String PROP_MAX_ITEM_COUNT_PER_FILE = 
+      "cs.ddb.export.max_item_count_per_file";
+  private static final int MAX_ITEM_COUNT_PER_FILE = 100000;
   private final OutputFormat<NullWritable, DynamoDBItemWritable> outputFormat = new
       ExportOutputFormat();
   private final TimeSource time = new TimeSource();
@@ -49,7 +49,7 @@ class ExportMapper extends MapReduceBase implements Mapper<Text, DynamoDBItemWri
   public void map(Text key, DynamoDBItemWritable value, OutputCollector<Text, Text> output,
       Reporter reporter) throws IOException {
     // Rotate output file if needed
-    if (itemCount % MAX_ITEM_COUNT_PER_FILE == 0) {
+    if (itemCount % jobConf.getInt(PROP_MAX_ITEM_COUNT_PER_FILE, MAX_ITEM_COUNT_PER_FILE) == 0) {
       long start = time.getNanoTime();
       if (recordWriter != null) {
         flusher.close(recordWriter, reporter);
