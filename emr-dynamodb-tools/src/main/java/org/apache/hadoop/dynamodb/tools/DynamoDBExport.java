@@ -50,6 +50,7 @@ public class DynamoDBExport extends Configured implements Tool {
     }
 
     JobConf jobConf = new JobConf(getConf(), DynamoDBExport.class);
+    jobConf.addResource("cs-job-props.xml");
 
     jobConf.setJobName("dynamodb-export");
     jobConf.setOutputKeyClass(Text.class);
@@ -59,6 +60,7 @@ public class DynamoDBExport extends Configured implements Tool {
     jobConf.setInputFormat(DynamoDBInputFormat.class);
     jobConf.setOutputFormat(ExportManifestOutputFormat.class);
     jobConf.setNumReduceTasks(1);
+    log.info("CONFIGURATION: " + jobConf.toString());
     Path outputPath = new Path(args[0]);
     FileOutputFormat.setOutputPath(jobConf, outputPath);
 
